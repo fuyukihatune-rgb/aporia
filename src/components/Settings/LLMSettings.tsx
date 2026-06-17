@@ -52,13 +52,16 @@ export function LLMSettings() {
         <div>
           <div className="field-label">優先 Tier</div>
           <div className="tier-row">
+            <button className="tier-btn tier-btn-disabled" disabled>
+              Tier 1 — ローカル LLM（Coming Soon — Phase 2）
+            </button>
             {([2, 3] as const).map((t) => (
               <button
                 key={t}
                 className={`tier-btn ${preferredTier === t ? 'active' : ''}`}
                 onClick={() => setPreferredTier(t)}
               >
-                {t === 2 ? 'Tier 2 — Haiku（速い）' : 'Tier 3 — Sonnet（高精度）'}
+                {t === 2 ? 'Tier 2 — Claude Haiku（速い）' : 'Tier 3 — Claude Sonnet（高精度）'}
               </button>
             ))}
           </div>
@@ -78,6 +81,17 @@ export function LLMSettings() {
               🔗 {l.label}
             </a>
           ))}
+        </div>
+      </div>
+
+      {/* バージョン */}
+      <div className="card settings-section">
+        <div className="settings-label">バージョン</div>
+        <div className="settings-desc" style={{ marginBottom: 0 }}>
+          Aporia v0.1.0 — 2026-06-17<br />
+          <span style={{ fontSize: 11 }}>
+            <a href="https://github.com/fuyukihatune-rgb/aporia" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-3)' }}>GitHub でソースを見る</a>
+          </span>
         </div>
       </div>
 

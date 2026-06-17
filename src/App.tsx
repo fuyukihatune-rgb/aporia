@@ -108,6 +108,16 @@ export default function App() {
                     {isLoading ? '準備中…' : '問答を始める'}
                   </button>
                 </div>
+                <div className="how-to">
+                  <div className="how-to-title">使い方</div>
+                  <ol className="how-to-list">
+                    <li>設定タブで <strong>Anthropic APIキー</strong>を入力</li>
+                    <li>検討したい主張・信念を入力して「問答を始める」</li>
+                    <li>エンジンの問いに答え続ける — <strong>定義 → 前提 → 検証 → 反例</strong>の順に進む</li>
+                    <li>矛盾が見つかると<span className="how-to-aporia">アポリア</span>へ。主張を見直すか、そのまま考え続けるかはあなた次第</li>
+                    <li>対話は自動保存。履歴タブからいつでも再開できる</li>
+                  </ol>
+                </div>
                 <div className="start-note">
                   対話データはこのデバイスにのみ保存されます。外部に送信されません（LLM API利用時を除く）。
                 </div>
