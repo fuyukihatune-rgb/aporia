@@ -328,14 +328,33 @@ html, body {
 
 /* session end bar */
 .session-end-bar {
-  padding: 14px;
-  text-align: center;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   font-size: 13px;
   color: var(--text-3);
   border-top: 1px solid var(--border);
   background: var(--surface);
-  padding-bottom: calc(14px + var(--safe-bottom));
+  padding-bottom: calc(12px + var(--safe-bottom));
 }
+.export-btn {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border: none;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: opacity 0.15s;
+}
+.export-btn:hover { opacity: 0.8; }
+.export-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
 /* ── Start screen ──────────────────────────────────────── */
 .start-root {
@@ -609,8 +628,27 @@ html, body {
 }
 .session-empty-sub { font-size: 12px; color: var(--text-4); margin-top: 4px; }
 .session-list { display: flex; flex-direction: column; gap: 1px; }
+.session-item-wrap { display: flex; align-items: stretch; gap: 8px; margin-bottom: 8px; }
+.session-item-wrap .session-item { flex: 1; margin-bottom: 0; }
+.session-export-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: 16px;
+  color: var(--text-3);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color 0.15s, color 0.15s;
+  font-family: inherit;
+}
+.session-export-btn:hover { border-color: var(--accent); color: var(--accent); }
 .session-item {
   display: flex;
+  margin-bottom: 0;
   flex-direction: column;
   gap: 6px;
   padding: 14px 16px;

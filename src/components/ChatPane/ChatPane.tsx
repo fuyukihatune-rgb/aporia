@@ -1,11 +1,14 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSessionStore } from '../../store/sessionStore';
 import { engineStep } from '../../engine/ElenchusEngine';
 import { TurnBubble } from './TurnBubble';
 import { InputArea } from './InputArea';
+import { db } from '../../db/database';
+import { downloadSession } from '../../utils/exportSession';
 
 export function ChatPane() {
-  const { turns, isLoading, currentPhase, error } = useSessionStore();
+  const { turns, isLoading, currentPhase, error, sessionId } = useSessionStore();
+  const [exporting, setExporting] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -40,7 +43,20 @@ export function ChatPane() {
       )}
       {isFinished && (
         <div className="session-end-bar">
-          セッション終了 — 思索の続きは、あなた自身の中に。
+          <span>セッション終了 — 思索の続きは、あなた自身の中に。</span>
+          <button
+            className="export-btn"
+            disabled={exporting}
+            onClick={async () => {
+              if (!sessionId) return;
+              setExporting(true);
+              const s = await db.sessions.get(sessionId);
+              if (s) await downloadSession(s);
+              setExporting(false);
+            }}
+          >
+            {exporting ? '…' : 'ログを保存'}
+          </button>
         </div>
       )}
     </div>
