@@ -1,73 +1,102 @@
-# React + TypeScript + Vite
+# Aporia
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**ソクラテス的問答エンジン** — あなたの主張・信念を9フェーズの対話で徹底的に検証するAIアプリ。
 
-Currently, two official plugins are available:
+🔗 **https://aporia.xdcyw.net**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## コンセプト
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+「アポリア（Aporia）」はギリシャ語で「行き詰まり・困惑」を意味する。  
+ソクラテスのエレンコス（問答）は、相手の信念を問い詰めることで内部矛盾を露わにし、「自分が知らないことを知っている」状態へ導く。
 
-## Expanding the ESLint configuration
+本アプリはこのエレンコスを **決定論的な対話エンジン** として実装し、ユーザーが自分の主張・信念を構造的に検討できるツールを提供する。
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 機能
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- **9フェーズの問答エンジン**  
+  `CLAIM → DEFINITION → PREMISES → CONSISTENCY → COUNTER → REFINEMENT → APORIA → RESOLUTION`
+- **Claudeによる哲学的問いの生成**（Tier 2: Haiku / Tier 3: Sonnet）
+- **IndexedDBによる完全オフライン保存**（Dexie.js）
+- **セッションログをMarkdownでエクスポート**
+- **プライバシーファースト**：対話データは外部サーバーに保存しない
+- Ataraxia Works デザインシステムに準拠したUI
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## 技術スタック
+
+| カテゴリ | 技術 |
+|----------|------|
+| フレームワーク | React 19 + TypeScript |
+| ビルド | Vite 8 |
+| 状態管理 | Zustand 5 |
+| DB | Dexie.js 4 (IndexedDB) |
+| LLM | Claude Haiku / Sonnet (Anthropic API) |
+| スタイル | Tailwind CSS v4 |
+| デプロイ | Cloudflare Pages |
+
+---
+
+## ローカル開発
+
+```bash
+npm install
+cp .env.example .env  # APIキーを設定（不要な場合は設定タブから入力）
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## フェーズ定義
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+IDLE → CLAIM → DEFINITION → PREMISES → CONSISTENCY → COUNTER → REFINEMENT
+                                              ↓                    ↓
+                                           APORIA ← ─────────────┘
+                                              ↓
+                                         RESOLUTION
+```
+
+| フェーズ | 内容 |
+|----------|------|
+| CLAIM | 主張の正規化・キーワード抽出 |
+| DEFINITION | キーワードの定義を求める |
+| PREMISES | 主張の根拠・前提を引き出す |
+| CONSISTENCY | 前提群の整合性を検証 |
+| COUNTER | 反例・類似ケースを提示 |
+| REFINEMENT | 主張の修正（PREMISES に戻る） |
+| APORIA | 矛盾が解消できない状態 |
+| RESOLUTION | セッション終了・ログ保存 |
+
+---
+
+## セキュリティ
+
+- CSP メタタグによるスクリプト注入・外部通信の制限
+- LLMレスポンスのJSONパース時にプロトタイプ汚染を防止
+- ユーザー入力長の制限（主張: 500文字、返答: 1000文字）
+- APIキーはlocalStorageに保存（デバイスローカルのみ）
+
+---
+
+## ロードマップ
+
+### Phase 1（現在）
+- ✅ エレンコスエンジン（全フェーズ）
+- ✅ Claude Tier 2/3 Gateway
+- ✅ IndexedDB 永続化
+- ✅ セッションログ Markdown エクスポート
+
+### Phase 2
+- [ ] Tier 1 — WebLLM（Phi-3-mini、完全オフライン）
+- [ ] 前提マップのグラフ可視化
+- [ ] 矛盾ハイライト
+- [ ] PWA Service Worker
+
+---
+
+Made by [田中芙雪（Sirusu）](https://x.com/Sirusu_Tanaka) / ataraxia works — 2026
