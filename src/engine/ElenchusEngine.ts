@@ -123,36 +123,59 @@ export async function engineStep(userInput: string): Promise<void> {
 
       case 'COUNTER': {
         const lower = userInput.toLowerCase();
-        if (
+
+        // 選択肢提示後の回答を検出
+        const wantsRefinement =
           lower.includes('修正') ||
           lower.includes('変え') ||
           lower.includes('見直') ||
-          lower.includes('refinement')
-        ) {
+          lower.includes('①') ||
+          lower === '1';
+        const wantsEnd =
+          lower.includes('わからない') ||
+          lower.includes('答えられない') ||
+          lower.includes('できない') ||
+          lower.includes('無理') ||
+          lower.includes('終了') ||
+          lower.includes('このまま') ||
+          lower.includes('②') ||
+          lower === '2';
+
+        if (wantsRefinement) {
           store.setUserSelectedRefinement(true);
           store.addEngineTurn(
             'では主張を修正しましょう。修正後の主張をどうぞ。',
             'COUNTER',
           );
-        } else if (
-          lower.includes('わからない') ||
-          lower.includes('答えられない') ||
-          lower.includes('できない') ||
-          lower.includes('無理')
-        ) {
+        } else if (wantsEnd) {
           store.setCounterExampleUnanswered(true);
           store.addEngineTurn('反例に応答できないことが確認されました。', 'COUNTER');
         } else {
-          const raw = await router.complete(buildCounterPrompt(claim!, premises));
-          const parsed = extractJSON(raw) as {
-            counterExample: string;
-            question: string;
-          };
-          store.addEngineTurn(
-            `${parsed.counterExample}\n\n${parsed.question}`,
-            'COUNTER',
-          );
-          store.setCurrentQuestion(parsed.question);
+          // COUNTER フェーズのエンジン発話数を数える（1回目は afterTransition で生成済み）
+          const counterEngineRounds = store.turns.filter(
+            (t) => t.role === 'engine' && t.phase === 'COUNTER',
+          ).length;
+
+          const MAX_COUNTER_ROUNDS = 2;
+
+          if (counterEngineRounds >= MAX_COUNTER_ROUNDS) {
+            // 上限に達したら強制的に選択肢を提示
+            store.addEngineTurn(
+              '反例の検討はここまでにしましょう。\n\n①「主張を修正する」\n②「このまま終了する（アポリアへ）」\n\nどちらかを教えてください。',
+              'COUNTER',
+            );
+          } else {
+            const raw = await router.complete(buildCounterPrompt(claim!, premises));
+            const parsed = extractJSON(raw) as {
+              counterExample: string;
+              question: string;
+            };
+            store.addEngineTurn(
+              `${parsed.counterExample}\n\n${parsed.question}`,
+              'COUNTER',
+            );
+            store.setCurrentQuestion(parsed.question);
+          }
         }
         break;
       }
